@@ -17,39 +17,40 @@ import java.util.List;
 @Service
 public class AdocaoService {
 
-    @Autowired
-    private PetRepository petRepository;
+	@Autowired
+	private PetRepository petRepository;
 
-    @Autowired
-    private TutorRepository tutorRepository;
+	@Autowired
+	private TutorRepository tutorRepository;
 
-    @Autowired
-    private AdocaoRepository adocaoRepository;
+	@Autowired
+	private AdocaoRepository adocaoRepository;
 
-    public List<AdocaoDTO> listarTodos(){
+	public List<AdocaoDTO> listarTodos() {
 
-        return adocaoRepository.findAll().stream().map(AdocaoDTO::new).toList();
-    }
-    public AdocaoDTO listar(Long id){
+		return adocaoRepository.findAll().stream().map(AdocaoDTO::new).toList();
+	}
 
-        return adocaoRepository.findById(id).stream().findFirst().map(AdocaoDTO::new).orElse(null);
-    }
+	public AdocaoDTO listar(Long id) {
 
-    public void solicitar(SolicitacaoDeAdocaoDTO dto){
-        Pet pet = petRepository.getReferenceById(dto.idPet());
-        Tutor tutor = tutorRepository.getReferenceById(dto.idTutor());
+		return adocaoRepository.findById(id).stream().findFirst().map(AdocaoDTO::new).orElse(null);
+	}
 
-        adocaoRepository.save(new Adocao(tutor,pet, dto.motivo()));
-    }
+	public void solicitar(SolicitacaoDeAdocaoDTO dto) {
+		Pet pet = petRepository.getReferenceById(dto.idPet());
+		Tutor tutor = tutorRepository.getReferenceById(dto.idTutor());
 
-    public void aprovar(AprovarAdocaoDTO dto){
-        Adocao adocao = adocaoRepository.getReferenceById(dto.idAdocao());
-        adocao.marcarComoAprovada();
-        adocao.getPet().marcarComoAdotado();
-    }
+		adocaoRepository.save(new Adocao(tutor, pet, dto.motivo()));
+	}
 
-    public void reprovar(ReprovarAdocaoDTO dto){
-        Adocao adocao = adocaoRepository.getReferenceById(dto.idAdocao());
-        adocao.marcarComoReprovada(dto.justificativa());
-    }
+	public void aprovar(AprovarAdocaoDTO dto) {
+		Adocao adocao = adocaoRepository.getReferenceById(dto.idAdocao());
+		adocao.marcarComoAprovada();
+		adocao.getPet().marcarComoAdotado();
+	}
+
+	public void reprovar(ReprovarAdocaoDTO dto) {
+		Adocao adocao = adocaoRepository.getReferenceById(dto.idAdocao());
+		adocao.marcarComoReprovada(dto.justificativa());
+	}
 }
